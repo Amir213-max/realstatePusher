@@ -10,11 +10,11 @@ export default function Logo({
   
   const getLogoPath = () => {
     if (variant === 'emblem') {
-      return '/assets/brand/images/Layer-1.png';
+      return '/logo.png';
     }
     return language === 'ar' 
-      ? '/assets/logo/ar logo.png'
-      : '/assets/logo/en logo.png';
+      ? '/logo.png'
+      : '/logo.png'
   };
 
   return (
@@ -23,7 +23,7 @@ export default function Logo({
         src={getLogoPath()}
         alt="Yafel Real Estate"
         className="object-contain"
-        style={{ width: variant === 'emblem' ? 100 : 100, height: variant === 'emblem' ? 40 : 40 }}
+        style={{ width: variant === 'emblem' ? 200 : 200, height: variant === 'emblem' ? 70 : 70 }}
       />
     </div>
   );
