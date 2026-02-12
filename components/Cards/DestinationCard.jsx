@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatNumber } from '../../lib/utils';
+import ImageWithLoader from '../ui/ImageWithLoader';
 
 export default function DestinationCard({ destination }) {
   const { language, t } = useLanguage();
@@ -13,7 +13,7 @@ export default function DestinationCard({ destination }) {
     <Link href={`/destinations/${destination.id}`}>
       <div className={`bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 ${isRTL ? 'rtl' : 'ltr'}`}>
         <div className="relative h-48 w-full">
-          <Image
+          <ImageWithLoader
             src={destination.image || '/destinations/default.jpg'}
             alt={t({ ar: destination.name_ar, en: destination.name_en })}
             fill

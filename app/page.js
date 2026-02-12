@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
@@ -10,6 +9,7 @@ import SectionHeader from '@/components/SectionHeader';
 import ProjectCard from '@/components/Cards/ProjectCard';
 import DestinationCard from '@/components/Cards/DestinationCard';
 import Button from '@/components/ui/Button';
+import ImageWithLoader from '@/components/ui/ImageWithLoader';
 import { useProjects, useRegions, useProjectsSimple } from '@/hooks/useGraphQL';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay, Pagination, EffectCoverflow } from 'swiper/modules';
@@ -171,7 +171,7 @@ export default function Home() {
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
-          <Image
+          <ImageWithLoader
             src={heroImages[1]}
             alt="Yafel Real Estate"
             fill
@@ -489,7 +489,7 @@ export default function Home() {
               <SwiperSlide key={project.id}>
                 <Link href={`/projects/${project.id}`}>
                   <div className="relative h-64 rounded-xl overflow-hidden group cursor-pointer">
-                    <Image
+                    <ImageWithLoader
                       src={project.images?.[0] || 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv'}
                       alt={t({ ar: project.name_ar, en: project.name_en })}
                       fill
@@ -532,7 +532,7 @@ export default function Home() {
                 className="bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 group"
               >
                 <div className="relative w-full h-32 mb-4 rounded-full overflow-hidden">
-                  <Image
+                  <ImageWithLoader
                     src={destination.image || '/destinations/default.jpg'}
                     alt={t({ ar: destination.name_ar, en: destination.name_en })}
                     fill
@@ -560,7 +560,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
               {/* Property Image */}
               <div className="relative h-96 lg:h-[500px]">
-                <Image
+                <ImageWithLoader
                   src={featuredProjects[0]?.images?.[0] || '/assets/brand/images/shutterstock_2558087881.jpg'}
                   alt={t({ ar: featuredProjects[0]?.name_ar, en: featuredProjects[0]?.name_en })}
                   fill

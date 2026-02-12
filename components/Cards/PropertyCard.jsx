@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import Card from '../ui/Card';
 import Badge from '../Badge';
+import ImageWithLoader from '../ui/ImageWithLoader';
 
 export default function PropertyCard({ property }) {
   const { language, t } = useLanguage();
@@ -14,7 +14,7 @@ export default function PropertyCard({ property }) {
     <Link href={`/properties/${property.id}`}>
       <Card hover className={`${isRTL ? 'rtl' : 'ltr'}`}>
         <div className="relative h-56 w-full overflow-hidden">
-          <Image
+          <ImageWithLoader
             src={property.image || 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv'}
             alt={property.name}
             fill

@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SectionHeader from '@/components/SectionHeader';
 import DeveloperCard from '@/components/Cards/DeveloperCard';
-import Image from 'next/image';
+import ImageWithLoader from '@/components/ui/ImageWithLoader';
 import { useRegion, useProjects } from '@/hooks/useGraphQL';
 import { transformDeveloper } from '@/lib/dataTransform';
 
@@ -61,7 +61,7 @@ export default function DestinationDetailPage({ params }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="relative w-full md:w-96 h-64 rounded-lg overflow-hidden">
-              <Image
+              <ImageWithLoader
                 src={destination.image || '/destinations/default.jpg'}
                 alt={t({ ar: destination.name_ar, en: destination.name_en })}
                 fill

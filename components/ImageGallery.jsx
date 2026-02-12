@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import ImageWithLoader from './ui/ImageWithLoader';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -35,7 +35,7 @@ export default function ImageGallery({ images }) {
   return (
     <div className="space-y-4">
       <div className="relative w-full h-96 rounded-lg overflow-hidden">
-        <Image
+        <ImageWithLoader
           src={selectedImage}
           alt="Main"
           fill
@@ -58,7 +58,7 @@ export default function ImageGallery({ images }) {
                 }`}
                 onClick={() => setSelectedImage(img)}
               >
-                <Image
+                <ImageWithLoader
                   src={img}
                   alt={`Thumbnail ${index + 1}`}
                   fill

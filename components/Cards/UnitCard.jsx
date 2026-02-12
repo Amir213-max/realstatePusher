@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatPrice } from '../../lib/utils';
+import ImageWithLoader from '../ui/ImageWithLoader';
 
 export default function UnitCard({ unit }) {
   const { language, t } = useLanguage();
@@ -13,7 +13,7 @@ export default function UnitCard({ unit }) {
     <Link href={`/units/${unit.id}`}>
       <div className={`bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 ${isRTL ? 'rtl' : 'ltr'}`}>
         <div className="relative h-48 w-full">
-          <Image
+          <ImageWithLoader
             src={unit.images?.[0] || '/units/default.jpg'}
             alt={`Unit ${unit.id}`}
             fill

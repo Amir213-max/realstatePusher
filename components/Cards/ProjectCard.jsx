@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import Card from '../ui/Card';
 import Badge from '../Badge';
+import ImageWithLoader from '../ui/ImageWithLoader';
 
 export default function ProjectCard({ project, priority = false }) {
   const { language, t } = useLanguage();
@@ -14,7 +14,7 @@ export default function ProjectCard({ project, priority = false }) {
     <Link href={`/projects/${project.id}`}>
       <Card hover className={`hover-lift ${isRTL ? 'rtl' : 'ltr'}`}>
         <div className="relative h-56 w-full overflow-hidden bg-gray-200">
-          <Image
+          <ImageWithLoader
             src={project.images?.[0] || project.main_image || 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv'}
             alt={t({ ar: project.name_ar, en: project.name_en })}
             fill
@@ -22,8 +22,6 @@ export default function ProjectCard({ project, priority = false }) {
             className="object-cover transition-transform duration-300 hover:scale-105"
             loading={priority ? "eager" : "lazy"}
             priority={priority}
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             onError={(e) => {
               e.target.src = 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv';
             }}

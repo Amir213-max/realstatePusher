@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Thumbs, FreeMode } from 'swiper/modules';
+import ImageWithLoader from './ui/ImageWithLoader';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -53,7 +53,7 @@ export default function PropertyImageGallery({ images, propertyName }) {
           {images.map((img, index) => (
             <SwiperSlide key={index}>
               <div className="relative w-full h-[400px] md:h-[600px] lg:h-[700px]">
-                <Image
+                <ImageWithLoader
                   src={img}
                   alt={`${propertyName} - Image ${index + 1}`}
                   fill
@@ -92,7 +92,7 @@ export default function PropertyImageGallery({ images, propertyName }) {
                     : 'border-transparent hover:border-[#cfcfcf] opacity-70 hover:opacity-100'
                 }`}
               >
-                <Image
+                <ImageWithLoader
                   src={img}
                   alt={`Thumbnail ${index + 1}`}
                   fill

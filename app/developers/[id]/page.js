@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import SectionHeader from '@/components/SectionHeader';
 import ProjectCard from '@/components/Cards/ProjectCard';
 import Badge from '@/components/Badge';
-import Image from 'next/image';
+import ImageWithLoader from '@/components/ui/ImageWithLoader';
 import { useDeveloper, useProjects } from '@/hooks/useGraphQL';
 
 export default function DeveloperDetailPage({ params }) {
@@ -61,7 +61,7 @@ export default function DeveloperDetailPage({ params }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="relative w-48 h-48 rounded-lg overflow-hidden bg-gray-200">
-              <Image
+              <ImageWithLoader
                 src={developer.logo || '/logos/default.png'}
                 alt={t({ ar: developer.name_ar, en: developer.name_en })}
                 fill

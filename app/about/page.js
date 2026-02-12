@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Button from '@/components/ui/Button';
+import ImageWithLoader from '@/components/ui/ImageWithLoader';
 
 export default function AboutPage() {
   const { language, t } = useLanguage();
@@ -109,7 +109,7 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="relative h-96 rounded-2xl overflow-hidden">
-              <Image
+              <ImageWithLoader
                 src="https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2209394407_uuurxb"
                 alt="Yafel Real Estate"
                 fill
