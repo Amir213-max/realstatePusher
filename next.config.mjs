@@ -26,6 +26,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'keeper.in-brackets.online',
       },
+      {
+        protocol: 'https',
+        hostname: 'prod-images.nawy.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.nawy.com',
+      },
     ],
   },
   // Performance optimizations

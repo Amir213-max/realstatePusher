@@ -38,9 +38,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: translations.home },
-    { href: '/properties', label: translations.properties },
     { href: '/sell', label: translations.sell },
-    { href: '/about', label: translations.about },
     { href: '/contact', label: translations.contact },
   ];
 
@@ -80,19 +78,17 @@ export default function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-1 rtl:gap-reverse">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  pathname === link.href
-                    ? 'text-[#1e1e1e] bg-[#efefef]'
-                    : 'text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]'
-                }`}
-              >
-                {t(link.label)}
-              </Link>
-            ))}
+            {/* Home Link */}
+            <Link
+              href="/"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                pathname === '/'
+                  ? 'text-[#1e1e1e] bg-[#efefef]'
+                  : 'text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]'
+              }`}
+            >
+              {t(translations.home)}
+            </Link>
             
             {/* Regions Dropdown */}
             <div className="relative dropdown-container">
@@ -126,38 +122,6 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Compounds Dropdown */}
-            <div className="relative dropdown-container">
-              <button
-                onClick={() => setOpenDropdown(openDropdown === 'compounds' ? null : 'compounds')}
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef] flex items-center gap-1"
-              >
-                {t(translations.compounds)}
-                <svg className={`w-4 h-4 transition-transform ${openDropdown === 'compounds' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {openDropdown === 'compounds' && (
-                <div className={`absolute top-full mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 w-64 max-h-96 overflow-y-auto z-50 ${isRTL ? 'right-0' : 'left-0'}`}>
-                  <div className="p-4">
-                    <h3 className="font-bold text-[#1e1e1e] mb-3 text-sm">{t(translations.compounds)}</h3>
-                    <div className="space-y-1">
-                      {(projectsData || []).slice(0, 10).map((project) => (
-                        <Link
-                          key={project.id}
-                          href={`/projects/${project.id}`}
-                          onClick={() => setOpenDropdown(null)}
-                          className="block px-3 py-2 text-sm text-gray-700 hover:bg-[#efefef] hover:text-[#1e1e1e] rounded-lg transition-colors"
-                        >
-                          {project ? t({ ar: project.name_ar || project.name, en: project.name_en || project.name }) : ''}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Developers Dropdown */}
             <div className="relative dropdown-container">
               <button
@@ -182,6 +146,38 @@ export default function Navbar() {
                           className="block px-3 py-2 text-sm text-gray-700 hover:bg-[#efefef] hover:text-[#1e1e1e] rounded-lg transition-colors"
                         >
                           {developer ? t({ ar: developer.name_ar || developer.name, en: developer.name_en || developer.name }) : ''}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Compounds Dropdown */}
+            <div className="relative dropdown-container">
+              <button
+                onClick={() => setOpenDropdown(openDropdown === 'compounds' ? null : 'compounds')}
+                className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef] flex items-center gap-1"
+              >
+                {t(translations.compounds)}
+                <svg className={`w-4 h-4 transition-transform ${openDropdown === 'compounds' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openDropdown === 'compounds' && (
+                <div className={`absolute top-full mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 w-64 max-h-96 overflow-y-auto z-50 ${isRTL ? 'right-0' : 'left-0'}`}>
+                  <div className="p-4">
+                    <h3 className="font-bold text-[#1e1e1e] mb-3 text-sm">{t(translations.compounds)}</h3>
+                    <div className="space-y-1">
+                      {(projectsData || []).slice(0, 10).map((project) => (
+                        <Link
+                          key={project.id}
+                          href={`/projects/${project.id}`}
+                          onClick={() => setOpenDropdown(null)}
+                          className="block px-3 py-2 text-sm text-gray-700 hover:bg-[#efefef] hover:text-[#1e1e1e] rounded-lg transition-colors"
+                        >
+                          {project ? t({ ar: project.name_ar || project.name, en: project.name_en || project.name }) : ''}
                         </Link>
                       ))}
                     </div>
@@ -232,6 +228,30 @@ export default function Navbar() {
                 {language === 'ar' ? 'جديد' : 'New'}
               </span>
             </button>
+
+            {/* Sell Link */}
+            <Link
+              href="/sell"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                pathname === '/sell'
+                  ? 'text-[#1e1e1e] bg-[#efefef]'
+                  : 'text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]'
+              }`}
+            >
+              {t(translations.sell)}
+            </Link>
+
+            {/* Contact Link */}
+            <Link
+              href="/contact"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                pathname === '/contact'
+                  ? 'text-[#1e1e1e] bg-[#efefef]'
+                  : 'text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]'
+              }`}
+            >
+              {t(translations.contact)}
+            </Link>
           </div>
 
           <div className="flex items-center gap-3 rtl:gap-reverse">
@@ -283,20 +303,18 @@ export default function Navbar() {
           }}
         >
           <div className="py-4 space-y-2 border-t border-[#efefef]">
-            {navLinks.map((link, index) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 animate-slideInLeft ${
-                  pathname === link.href
-                    ? 'text-[#1e1e1e] bg-[#efefef]'
-                    : 'text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]'
-                }`}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {t(link.label)}
-              </Link>
-            ))}
+            {/* Home Link */}
+            <Link
+              href="/"
+              className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 animate-slideInLeft ${
+                pathname === '/'
+                  ? 'text-[#1e1e1e] bg-[#efefef]'
+                  : 'text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]'
+              }`}
+              style={{ animationDelay: '0s' }}
+            >
+              {t(translations.home)}
+            </Link>
             
             {/* Mobile Dropdowns */}
             <div className="space-y-2">
@@ -330,36 +348,6 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* Compounds Mobile */}
-              <div>
-                <button
-                  onClick={() => setOpenDropdown(openDropdown === 'compounds-mobile' ? null : 'compounds-mobile')}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]"
-                >
-                  {t(translations.compounds)}
-                  <svg className={`w-5 h-5 transition-transform ${openDropdown === 'compounds-mobile' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {openDropdown === 'compounds-mobile' && (
-                  <div className="mt-2 space-y-1 pl-4">
-                    {(projectsData || []).slice(0, 10).map((project) => (
-                      <Link
-                        key={project.id}
-                        href={`/projects/${project.id}`}
-                        onClick={() => {
-                          setOpenDropdown(null);
-                          setIsMenuOpen(false);
-                        }}
-                        className="block px-3 py-2 text-sm text-gray-700 hover:bg-[#efefef] rounded-lg transition-colors"
-                      >
-                        {project ? t({ ar: project.name_ar || project.name, en: project.name_en || project.name }) : ''}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               {/* Developers Mobile */}
               <div>
                 <button
@@ -384,6 +372,36 @@ export default function Navbar() {
                         className="block px-3 py-2 text-sm text-gray-700 hover:bg-[#efefef] rounded-lg transition-colors"
                       >
                         {developer ? t({ ar: developer.name_ar || developer.name, en: developer.name_en || developer.name }) : ''}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Compounds Mobile */}
+              <div>
+                <button
+                  onClick={() => setOpenDropdown(openDropdown === 'compounds-mobile' ? null : 'compounds-mobile')}
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]"
+                >
+                  {t(translations.compounds)}
+                  <svg className={`w-5 h-5 transition-transform ${openDropdown === 'compounds-mobile' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {openDropdown === 'compounds-mobile' && (
+                  <div className="mt-2 space-y-1 pl-4">
+                    {(projectsData || []).slice(0, 10).map((project) => (
+                      <Link
+                        key={project.id}
+                        href={`/projects/${project.id}`}
+                        onClick={() => {
+                          setOpenDropdown(null);
+                          setIsMenuOpen(false);
+                        }}
+                        className="block px-3 py-2 text-sm text-gray-700 hover:bg-[#efefef] rounded-lg transition-colors"
+                      >
+                        {project ? t({ ar: project.name_ar || project.name, en: project.name_en || project.name }) : ''}
                       </Link>
                     ))}
                   </div>
@@ -425,13 +443,41 @@ export default function Navbar() {
             <button
               onClick={verifyConsultantModal.open}
               className="block w-full px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef] relative animate-slideInLeft"
-              style={{ animationDelay: `${navLinks.length * 0.1}s` }}
+              style={{ animationDelay: '0.5s' }}
             >
-              {t(translations.verifyConsultant)}
-              <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                {language === 'ar' ? 'جديد' : 'New'}
+              <span className="flex items-center justify-between">
+                <span>{t(translations.verifyConsultant)}</span>
+                <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full ml-2 rtl:ml-0 rtl:mr-2">
+                  {language === 'ar' ? 'جديد' : 'New'}
+                </span>
               </span>
             </button>
+
+            {/* Sell Link */}
+            <Link
+              href="/sell"
+              className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 animate-slideInLeft ${
+                pathname === '/sell'
+                  ? 'text-[#1e1e1e] bg-[#efefef]'
+                  : 'text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]'
+              }`}
+              style={{ animationDelay: '0.6s' }}
+            >
+              {t(translations.sell)}
+            </Link>
+
+            {/* Contact Link */}
+            <Link
+              href="/contact"
+              className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 animate-slideInLeft ${
+                pathname === '/contact'
+                  ? 'text-[#1e1e1e] bg-[#efefef]'
+                  : 'text-[#6D6D6D] hover:text-[#1e1e1e] hover:bg-[#efefef]'
+              }`}
+              style={{ animationDelay: '0.7s' }}
+            >
+              {t(translations.contact)}
+            </Link>
           </div>
         </div>
       </div>

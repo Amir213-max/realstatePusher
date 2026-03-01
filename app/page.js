@@ -36,6 +36,7 @@ export default function Home() {
     phoneCode: '+20',
     message: '',
   });
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const isRTL = language === 'ar';
   const swiperRef = useRef(null);
   const mostSearchedSwiperRef = useRef(null);
@@ -63,6 +64,7 @@ export default function Home() {
     unitTypes: { ar: 'أنواع الوحدات', en: 'Unit Types' },
     bedroomsBathrooms: { ar: 'غرف نوم و حمامات', en: 'Bedrooms & Bathrooms' },
     priceRange: { ar: 'معدل السعر', en: 'Price Range' },
+    advancedSearch: { ar: 'بحث متقدم', en: 'Advanced Search' },
     searchFor: { ar: 'ابحث عن', en: 'Search For' },
     newProjects: { ar: 'المشاريع الجديدة', en: 'New Projects' },
     mostSearched: { ar: 'الكمبوندات الأكثر بحثا', en: 'Most Searched Compounds' },
@@ -93,33 +95,27 @@ export default function Home() {
   const searchForCards = [
     {
       id: 2,
-      icon: '📍',
+      image: 'https://prod-images.nawy.com/processed/pathway/image/3/medium.webp',
       title: { ar: 'بيع وحدتك', en: 'Sell Your Unit' },
       link: '/sell',
     },
     {
       id: 4,
-      icon: '🎯',
+      image: 'https://prod-images.nawy.com/processed/pathway/image/5/medium.webp',
       title: { ar: 'عروض', en: 'Offers' },
       link: '/offers',
     },
     {
       id: 5,
-      icon: '🔄',
+      image: 'https://prod-images.nawy.com/processed/pathway/image/2/medium.webp',
       title: { ar: 'وحدات اعادة بيع', en: 'Resale Units' },
       link: '/resale',
     },
     {
       id: 6,
-      icon: '🏢',
+      image: 'https://prod-images.nawy.com/processed/pathway/image/1/medium.webp',
       title: { ar: 'وحدات المطور', en: 'Developer Units' },
       link: '/developer-units',
-    },
-    {
-      id: 7,
-      icon: '🔔',
-      title: { ar: 'Yafel Unlocked', en: 'Yafel Unlocked' },
-      link: '/unlocked',
     },
   ];
 
@@ -229,17 +225,34 @@ export default function Home() {
       }
     }
   }, [isRTL, language]);
+
+  // Close modal on ESC key
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === 'Escape') {
+        setIsFilterModalOpen(false);
+      }
+    };
+    if (isFilterModalOpen) {
+      document.addEventListener('keydown', handleEsc);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isFilterModalOpen]);
   
   const heroImages = [
     'https://png.pngtree.com/thumb_back/fw800/background/20240601/pngtree-real-estate-luxury-building-sale-property-background-images-image_15851318.jpg',
-    'https://th.bing.com/th/id/OIP.Jy16vSGLOrlRWJ-2BrVMrgHaFj?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3',
+    'https://www.nawy.com/_next/static/media/landing-new-background.5e086e5d.webp',
     '/assets/brand/images/shutterstock_2558087881.jpg',
   ];
 
   // Show loading state without affecting layout
   if (projectsLoading || regionsLoading) {
     return (
-      <div className={`min-h-screen bg-[#efefef] ${isRTL ? 'rtl' : 'ltr'}`}>
+      <div className={`min-h-screen bg-white ${isRTL ? 'rtl' : 'ltr'}`}>
         <Navbar />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
@@ -253,13 +266,13 @@ export default function Home() {
   }
 
   return (
-    <div className={`min-h-screen bg-[#efefef] ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`min-h-screen  bg-white ${isRTL ? 'rtl' : 'ltr'}`}>
       <Navbar />
 
       {/* Enhanced Hero Section with Tabs */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[70vh] flex flex-col pb-24">
         {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 h-[73vh]">
           <ImageWithLoader
             src={heroImages[1]}
             alt="Yafel Real Estate"
@@ -268,42 +281,90 @@ export default function Home() {
             priority
             unoptimized
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1e1e1e]/85 via-[#1e1e1e]/75 to-[#1e1e1e]/85"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1e1e1e]/50 via-[#1e1e1e]/30 to-[#1e1e1e]/50"></div>
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight animate-fadeInUp">
-            {t(translations.heroTitle)}
-          </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-4xl mx-auto leading-relaxed animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-            {t(translations.heroSubtitle)}
-          </p>
+        {/* Enhanced Search Bar with Tabs - Half on background, half below */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 translate-y-1/2 z-10 w-full max-w-7xl px-4 sm:px-6 lg:px-8 mb-12 animate-fadeInUp" style={{ animationDelay: '0.4s', bottom: '0vh' }}>
+          {/* Text Content - Above form, on the right */}
+          <div className={`mb-6 ${isRTL ? 'text-right' : 'text-left'} animate-fadeInUp`}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 leading-tight">
+              {t(translations.heroTitle)}
+            </h1>
+            <p className="text-lg md:text-xl text-white max-w-4xl leading-relaxed">
+              {t(translations.heroSubtitle)}
+            </p>
+          </div>
 
-          {/* Enhanced Search Bar with Tabs */}
-          <div className="max-w-5xl mx-auto animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
-            <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden">
+          {/* Mobile Simplified Form */}
+          <div className="block sm:hidden">
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+              <div className="p-4">
+                <div className="mb-3">
+                  <div className="relative flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder={t(translations.searchPlaceholder)}
+                        className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] text-base rtl:pl-4 rtl:pr-10"
+                      />
+                      <svg
+                        className={`absolute top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 ${isRTL ? 'right-3' : 'left-3'}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <button
+                      onClick={() => setIsFilterModalOpen(true)}
+                      className="p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                      aria-label={t(translations.advancedSearch)}
+                    >
+                      <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
+                >
+                  {t(translations.search)}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Full Form */}
+          <div className="hidden sm:block">
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
               {/* Tabs */}
               <div className="flex border-b border-gray-200">
-                <button
-                  onClick={() => setSearchTab('compounds')}
-                  className={`flex-1 px-6 py-4 font-semibold text-lg transition-all ${
-                    searchTab === 'compounds'
-                      ? 'text-[#1e1e1e] border-b-2 border-[#1e1e1e]'
-                      : 'text-gray-500 hover:text-[#1e1e1e]'
-                  }`}
-                >
-                  {t(translations.compounds)}
-                </button>
                 <button
                   onClick={() => setSearchTab('units')}
                   className={`flex-1 px-6 py-4 font-semibold text-lg transition-all ${
                     searchTab === 'units'
-                      ? 'text-[#1e1e1e] border-b-2 border-[#1e1e1e]'
+                      ? 'text-[#1e1e1e] border-b-2 border-blue-500'
                       : 'text-gray-500 hover:text-[#1e1e1e]'
                   }`}
                 >
                   {t(translations.units)}
+                </button>
+                <button
+                  onClick={() => setSearchTab('compounds')}
+                  className={`flex-1 px-6 py-4 font-semibold text-lg transition-all ${
+                    searchTab === 'compounds'
+                      ? 'text-[#1e1e1e] border-b-2 border-blue-500'
+                      : 'text-gray-500 hover:text-[#1e1e1e]'
+                  }`}
+                >
+                  {t(translations.compounds)}
                 </button>
               </div>
 
@@ -316,7 +377,7 @@ export default function Home() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder={t(translations.searchPlaceholder)}
-                      className="w-full px-6 py-4 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#f0cb8e] focus:border-transparent text-[#1e1e1e] text-lg rtl:pl-6 rtl:pr-12"
+                      className="w-full px-6 py-4 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] text-lg rtl:pl-6 rtl:pr-12"
                     />
                     <svg
                       className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 ${isRTL ? 'right-4' : 'left-4'}`}
@@ -329,102 +390,247 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Filters Row */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                  <div>
-                    <label className={`block text-sm font-medium text-gray-700 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {t(translations.unitTypes)}
-                    </label>
+                {/* Filters Row - 3 dropdowns + Search Button */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="relative">
                     <select
                       value={unitType}
                       onChange={(e) => setUnitType(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#f0cb8e] focus:border-transparent text-[#1e1e1e] bg-white"
+                      className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] bg-white appearance-none cursor-pointer"
                     >
-                      <option value="">{t(translations.all)}</option>
+                      <option value="">{t(translations.unitTypes)}</option>
                       <option value="apartment">{language === 'ar' ? 'شقة' : 'Apartment'}</option>
                       <option value="villa">{language === 'ar' ? 'فيلا' : 'Villa'}</option>
                       <option value="townhouse">{language === 'ar' ? 'تاون هاوس' : 'Townhouse'}</option>
                       <option value="duplex">{language === 'ar' ? 'دوبلكس' : 'Duplex'}</option>
                     </select>
+                    <svg className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none ${isRTL ? 'left-3' : 'right-3'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </div>
-                  <div>
-                    <label className={`block text-sm font-medium text-gray-700 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {t(translations.bedroomsBathrooms)}
-                    </label>
+                  <div className="relative">
                     <select
                       value={bedrooms}
                       onChange={(e) => setBedrooms(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#f0cb8e] focus:border-transparent text-[#1e1e1e] bg-white"
+                      className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] bg-white appearance-none cursor-pointer"
                     >
-                      <option value="">{t(translations.all)}</option>
+                      <option value="">{t(translations.bedroomsBathrooms)}</option>
                       <option value="1">{language === 'ar' ? '1+ غرف' : '1+ Bedrooms'}</option>
                       <option value="2">{language === 'ar' ? '2+ غرف' : '2+ Bedrooms'}</option>
                       <option value="3">{language === 'ar' ? '3+ غرف' : '3+ Bedrooms'}</option>
                       <option value="4">{language === 'ar' ? '4+ غرف' : '4+ Bedrooms'}</option>
                     </select>
+                    <svg className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none ${isRTL ? 'left-3' : 'right-3'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </div>
-                  <div>
-                    <label className={`block text-sm font-medium text-gray-700 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {t(translations.priceRange)}
-                    </label>
+                  <div className="relative">
                     <select
                       value={priceRange}
                       onChange={(e) => setPriceRange(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#f0cb8e] focus:border-transparent text-[#1e1e1e] bg-white"
+                      className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] bg-white appearance-none cursor-pointer"
                     >
-                      <option value="">{t(translations.all)}</option>
+                      <option value="">{t(translations.priceRange)}</option>
                       <option value="0-500000">{language === 'ar' ? 'حتى 500,000' : 'Up to 500,000'}</option>
                       <option value="500000-1000000">{language === 'ar' ? '500,000 - 1,000,000' : '500,000 - 1,000,000'}</option>
                       <option value="1000000-2000000">{language === 'ar' ? '1,000,000 - 2,000,000' : '1,000,000 - 2,000,000'}</option>
                       <option value="2000000+">{language === 'ar' ? 'أكثر من 2,000,000' : 'More than 2,000,000'}</option>
                     </select>
+                    <svg className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none ${isRTL ? 'left-3' : 'right-3'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </div>
-                  <div>
-                    <label className={`block text-sm font-medium text-gray-700 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {t(translations.allDestinations)}
-                    </label>
-                    <select
-                      value={selectedDestination}
-                      onChange={(e) => setSelectedDestination(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#f0cb8e] focus:border-transparent text-[#1e1e1e] bg-white"
-                    >
-                      <option value="">{t(translations.allDestinations)}</option>
-                      {destinationsData.map((dest) => (
-                        <option key={dest.id} value={dest.id}>
-                          {t({ ar: dest.name_ar, en: dest.name_en })}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  {/* Search Button */}
+                  <button
+                    type="button"
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
+                  >
+                    {t(translations.search)}
+                  </button>
                 </div>
-
-                {/* Search Button */}
-                <Button size="lg" className="w-full md:w-auto">
-                  {t(translations.search)}
-                </Button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Advanced Search Modal */}
+      {isFilterModalOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 z-50 transition-opacity duration-300"
+            onClick={() => setIsFilterModalOpen(false)}
+          />
+          
+          {/* Modal */}
+          <div className={`fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl shadow-2xl transform transition-all duration-300 ease-out ${
+            isFilterModalOpen ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+          }`} style={{ maxHeight: '90vh', overflowY: 'auto' }}>
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10 rounded-t-3xl">
+              <h2 className="text-xl font-bold text-[#1e1e1e]">
+                {t(translations.advancedSearch)}
+              </h2>
+              <button
+                onClick={() => setIsFilterModalOpen(false)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label={language === 'ar' ? 'إغلاق' : 'Close'}
+              >
+                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              {/* Tabs */}
+              <div className="flex border-b border-gray-200 mb-6">
+                <button
+                  onClick={() => setSearchTab('units')}
+                  className={`flex-1 px-4 py-3 font-semibold text-base transition-all ${
+                    searchTab === 'units'
+                      ? 'text-[#1e1e1e] border-b-2 border-blue-500'
+                      : 'text-gray-500'
+                  }`}
+                >
+                  {t(translations.units)}
+                </button>
+                <button
+                  onClick={() => setSearchTab('compounds')}
+                  className={`flex-1 px-4 py-3 font-semibold text-base transition-all ${
+                    searchTab === 'compounds'
+                      ? 'text-[#1e1e1e] border-b-2 border-blue-500'
+                      : 'text-gray-500'
+                  }`}
+                >
+                  {t(translations.compounds)}
+                </button>
+              </div>
+
+              {/* Search Input */}
+              <div className="mb-6">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={t(translations.searchPlaceholder)}
+                    className="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] text-base rtl:pl-4 rtl:pr-11"
+                  />
+                  <svg
+                    className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 ${isRTL ? 'right-3' : 'left-3'}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Filters */}
+              <div className="space-y-4 mb-6">
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t(translations.unitTypes)}
+                  </label>
+                  <select
+                    value={unitType}
+                    onChange={(e) => setUnitType(e.target.value)}
+                    className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] bg-white appearance-none cursor-pointer"
+                  >
+                    <option value="">{t(translations.unitTypes)}</option>
+                    <option value="apartment">{language === 'ar' ? 'شقة' : 'Apartment'}</option>
+                    <option value="villa">{language === 'ar' ? 'فيلا' : 'Villa'}</option>
+                    <option value="townhouse">{language === 'ar' ? 'تاون هاوس' : 'Townhouse'}</option>
+                    <option value="duplex">{language === 'ar' ? 'دوبلكس' : 'Duplex'}</option>
+                  </select>
+                  <svg className={`absolute top-[2.75rem] transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none ${isRTL ? 'left-3' : 'right-3'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t(translations.bedroomsBathrooms)}
+                  </label>
+                  <select
+                    value={bedrooms}
+                    onChange={(e) => setBedrooms(e.target.value)}
+                    className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] bg-white appearance-none cursor-pointer"
+                  >
+                    <option value="">{t(translations.bedroomsBathrooms)}</option>
+                    <option value="1">{language === 'ar' ? '1+ غرف' : '1+ Bedrooms'}</option>
+                    <option value="2">{language === 'ar' ? '2+ غرف' : '2+ Bedrooms'}</option>
+                    <option value="3">{language === 'ar' ? '3+ غرف' : '3+ Bedrooms'}</option>
+                    <option value="4">{language === 'ar' ? '4+ غرف' : '4+ Bedrooms'}</option>
+                  </select>
+                  <svg className={`absolute top-[2.75rem] transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none ${isRTL ? 'left-3' : 'right-3'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t(translations.priceRange)}
+                  </label>
+                  <select
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                    className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[#1e1e1e] bg-white appearance-none cursor-pointer"
+                  >
+                    <option value="">{t(translations.priceRange)}</option>
+                    <option value="0-500000">{language === 'ar' ? 'حتى 500,000' : 'Up to 500,000'}</option>
+                    <option value="500000-1000000">{language === 'ar' ? '500,000 - 1,000,000' : '500,000 - 1,000,000'}</option>
+                    <option value="1000000-2000000">{language === 'ar' ? '1,000,000 - 2,000,000' : '1,000,000 - 2,000,000'}</option>
+                    <option value="2000000+">{language === 'ar' ? 'أكثر من 2,000,000' : 'More than 2,000,000'}</option>
+                  </select>
+                  <svg className={`absolute top-[2.75rem] transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none ${isRTL ? 'left-3' : 'right-3'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Search Button */}
+              <button
+                type="button"
+                onClick={() => setIsFilterModalOpen(false)}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-4 rounded-lg transition-colors duration-200 text-base"
+              >
+                {t(translations.search)}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Search For Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white mt-24 " style={{ marginTop: "150px" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className={`text-3xl md:text-4xl font-bold text-[#1e1e1e] mb-8 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t(translations.searchFor)}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-            {searchForCards.map((card) => (
+            {searchForCards.map((card, index) => (
               <Link
                 key={card.id}
                 href={card.link}
-                className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-[#f0cb8e] hover:shadow-lg transition-all duration-300 group"
+                className="bg-white border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-md transition-all duration-300 group flex flex-col items-center text-center animate-fadeInUp"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {card.icon}
+                <div className="relative w-12 h-12 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <ImageWithLoader
+                    src={card.image}
+                    alt={t(card.title)}
+                    fill
+                    sizes="48px"
+                    className="object-contain"
+                    loading="lazy"
+                  />
                 </div>
-                <h3 className="text-lg font-semibold text-[#1e1e1e] group-hover:text-[#f0cb8e] transition-colors">
+                <h3 className="text-base font-medium text-[#1e1e1e] group-hover:text-blue-600 transition-colors">
                   {t(card.title)}
                 </h3>
               </Link>
@@ -434,9 +640,9 @@ export default function Home() {
       </section>
 
       {/* Promotional Banners Section */}
-      <section className="py-12 bg-[#efefef]">
+      <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Banner 1 - Exclusive Offers */}
             <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 text-white relative overflow-hidden">
               <div className="relative z-10">
@@ -462,35 +668,20 @@ export default function Home() {
                 <div className="text-6xl">🔑</div>
               </div>
             </div>
-
-            {/* Banner 3 - Yafel Shares */}
-            <div className="bg-gradient-to-br from-teal-500 to-green-500 rounded-2xl p-8 text-white relative overflow-hidden">
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-2xl font-bold">Yafel Shares</h3>
-                  <div className={`text-right ${isRTL ? 'text-left' : 'text-right'}`}>
-                    <div className="text-3xl font-bold">61%</div>
-                    <div className="text-sm opacity-90">{t(translations.returnBeforeTax)}</div>
-                    <div className="text-sm opacity-90">9 {t(translations.months)}</div>
-                  </div>
-                </div>
-                <div className="text-sm opacity-90">{language === 'ar' ? 'التخارج الخامس' : 'Fifth Exit'}</div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
       {/* New Projects Section with Slider */}
-      <section className="py-24 bg-white">
+      <section className="py-9 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`flex items-center justify-between mb-12 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className={`flex items-center justify-between mb-12 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
             <h2 className="text-3xl md:text-4xl font-bold text-[#1e1e1e]">
               {t(translations.newProjects)}
             </h2>
             <Link href="/projects" className="text-[#f0cb8e] font-semibold hover:text-[#d8b280] transition-colors flex items-center gap-2">
               {t(translations.viewAll)}
-              <span>{isRTL ? '←' : '→'}</span>
+              <span>{isRTL ? '→' : '←'}</span>
             </Link>
           </div>
           
@@ -499,8 +690,9 @@ export default function Home() {
               <Swiper
                 ref={swiperRef}
                 modules={[Navigation, Autoplay, Pagination]}
-                spaceBetween={24}
+                spaceBetween={14}
                 slidesPerView={1}
+                speed={800}
                 navigation={{
                   nextEl: '.swiper-button-next-new-projects',
                   prevEl: '.swiper-button-prev-new-projects',
@@ -512,27 +704,28 @@ export default function Home() {
                 autoplay={{
                   delay: 3500,
                   disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
                 }}
                 breakpoints={{
                   640: {
-                    slidesPerView: 1.5,
-                    spaceBetween: 24,
+                    slidesPerView: 1,
+                    spaceBetween: 12,
                   },
                   768: {
                     slidesPerView: 2,
-                    spaceBetween: 24,
+                    spaceBetween: 16,
                   },
                   1024: {
-                    slidesPerView: 2.5,
-                    spaceBetween: 28,
+                    slidesPerView: 3,
+                    spaceBetween: 20,
                   },
                   1280: {
                     slidesPerView: 3,
-                    spaceBetween: 32,
+                    spaceBetween: 24,
                   },
                   1440: {
-                    slidesPerView: 3.5,
-                    spaceBetween: 36,
+                    slidesPerView: 3,
+                    spaceBetween: 28,
                   },
                 }}
                 className="new-projects-swiper"
@@ -547,11 +740,26 @@ export default function Home() {
                   swiper.update();
                 }}
               >
-                {newProjects.map((project) => (
-                  <SwiperSlide key={project.id}>
-                    <div className="h-full">
-                      <ProjectCard project={project} />
-                    </div>
+                {newProjects.map((project, index) => (
+                  <SwiperSlide key={project.id} className="h-auto">
+                    <Link 
+                      href={`/projects/${project.id}`}
+                      className="block w-full h-full group"
+                    >
+                      <div
+                        className="relative w-full rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-lg group-hover:shadow-2xl transition-all duration-500 transform group-hover:-translate-y-2"
+                        style={{ aspectRatio: '391 / 219', paddingBottom: '56%' }}
+                      >
+                        <ImageWithLoader
+                          src={project.images?.[0] || project.main_image || 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv'}
+                          alt={t({ ar: project.name_ar, en: project.name_en })}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                          loading="lazy"
+                        />
+                      </div>
+                    </Link>
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -584,7 +792,7 @@ export default function Home() {
       </section>
 
       {/* Most Searched Compounds Section */}
-      <section className="py-24 bg-[#efefef]">
+      <section className="py-9 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`flex items-center justify-between mb-12 ${isRTL ? 'flex-row-reverse' : ''}`}>
             <div>
@@ -650,11 +858,43 @@ export default function Home() {
                   swiper.update();
                 }}
               >
-                {mostSearchedProjects.map((project) => (
-                  <SwiperSlide key={project.id}>
-                    <div className="h-full">
-                      <ProjectCard project={project} />
-                    </div>
+                {mostSearchedProjects.map((project, index) => (
+                  <SwiperSlide key={project.id} className="h-auto">
+                    <Link 
+                      href={`/projects/${project.id}`}
+                      className="block w-full h-full group animate-fadeInUp"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <div className="relative w-full h-64 md:h-72 lg:h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-lg group-hover:shadow-2xl transition-all duration-500">
+                        <ImageWithLoader
+                          src={project.images?.[0] || project.main_image || 'https://res.cloudinary.com/dqqmswaf7/image/upload/shutterstock_2256037689_mc4cxv'}
+                          alt={t({ ar: project.name_ar, en: project.name_en })}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                          loading="lazy"
+                        />
+                        {/* Overlay with gradient from black to lighter */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-500 group-hover:opacity-80"></div>
+                        
+                        {/* Content Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 transform translate-y-0 group-hover:translate-y-0 transition-all duration-500 ease-out">
+                          <div className="rounded-xl p-4 md:p-5 transform translate-y-2 opacity-90 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-2 drop-shadow-lg group-hover:text-[#f0cb8e] transition-colors duration-500 ease-out transform group-hover:scale-105">
+                              {t({ ar: project.name_ar, en: project.name_en })}
+                            </h3>
+                            <div className="flex items-center gap-2 transform translate-y-1 group-hover:translate-y-0 transition-all duration-500 ease-out delay-75">
+                              <span className="text-base md:text-lg font-semibold text-white drop-shadow-md">
+                                {project.unitsCount || 0}
+                              </span>
+                              <span className="text-sm md:text-base text-white/90 drop-shadow-md">
+                                {language === 'ar' ? 'وحدات' : 'Units'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -687,7 +927,7 @@ export default function Home() {
       </section>
 
       {/* Most Important Areas Section */}
-      <section className="py-24 bg-white">
+      <section className="py-9 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h2 className="text-3xl md:text-4xl font-bold text-[#1e1e1e] mb-2">
@@ -697,23 +937,25 @@ export default function Home() {
               {destinationsData.length} {t(translations.results)}
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
             {destinationsData.map((destination) => (
               <Link
                 key={destination.id}
                 href={`/destinations/${destination.id}`}
-                className="bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 group"
+                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 group p-4 border border-gray-300"
               >
-                <div className="relative w-full h-32 mb-4 rounded-full overflow-hidden">
-                  <ImageWithLoader
-                    src={destination.image || '/destinations/default.jpg'}
-                    alt={t({ ar: destination.name_ar, en: destination.name_en })}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    unoptimized
-                  />
+                <div className="flex justify-center mb-3">
+                  <div className="relative w-24 h-24 rounded-full overflow-hidden">
+                    <ImageWithLoader
+                      src={destination.image || '/destinations/default.jpg'}
+                      alt={t({ ar: destination.name_ar, en: destination.name_en })}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      unoptimized
+                    />
+                  </div>
                 </div>
-                <h3 className="text-center text-lg font-semibold text-[#1e1e1e] group-hover:text-[#f0cb8e] transition-colors">
+                <h3 className="text-center text-base font-semibold text-[#1e1e1e] group-hover:text-[#f0cb8e] transition-colors">
                   {t({ ar: destination.name_ar, en: destination.name_en })}
                 </h3>
               </Link>
@@ -723,7 +965,7 @@ export default function Home() {
       </section>
 
       {/* Recommended For You Section */}
-      <section className="py-24 bg-white">
+      <section className="py-9 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className={`text-4xl md:text-5xl font-bold text-[#1e1e1e] mb-12 ${isRTL ? 'text-right' : 'text-left'}`}>
             {language === 'ar' ? 'نرشح لك' : 'Recommended For You'}
@@ -852,7 +1094,7 @@ export default function Home() {
       </section>
 
       {/* Featured Properties Section */}
-      <section className="py-24 bg-[#efefef]">
+      <section className="py-9 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             title={t(translations.featuredProperties)}
@@ -882,20 +1124,20 @@ export default function Home() {
       </section>
 
       {/* Real Estate Assistance Form Section */}
-      <section className="py-12 sm:py-16 ">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl p-4 sm:p-6 md:p-8 w-full overflow-hidden">
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="max-w-[520px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[rgb(228,235,242)] rounded-lg py-8 px-4 w-full flex flex-col items-center gap-2 mb-4">
             {/* Icon */}
-            <div className="flex justify-center mb-4 sm:mb-6">
+            <div className="flex justify-center mb-4">
               <div className="relative group">
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-105 transition-transform duration-300">
+                <div className="relative w-16 h-16 bg-blue-700 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-105 transition-transform duration-300">
                   {/* Envelope Icon */}
-                  <svg className="w-12 h-12 sm:w-14 sm:h-14 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-10 h-10 text-white transform group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                   </svg>
                   {/* Phone Icon Overlay */}
-                  <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1.5 sm:p-2 shadow-md transform group-hover:rotate-12 transition-transform duration-300">
-                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-md transform group-hover:rotate-12 transition-transform duration-300">
+                    <svg className="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                     </svg>
                   </div>
@@ -904,12 +1146,12 @@ export default function Home() {
             </div>
 
             {/* Title */}
-            <h2 className={`text-xl sm:text-2xl md:text-3xl font-bold text-[#1e1e1e] mb-2 sm:mb-3 text-center ${isRTL ? 'text-right' : 'text-left'}`}>
+            <h2 className={`text-lg sm:text-xl font-bold text-blue-700 mb-2 text-center`}>
               {t(translations.needAssistance)}
             </h2>
 
             {/* Subtitle */}
-            <p className={`text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 text-center px-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+            <p className={`text-xs sm:text-sm text-gray-700 mb-6 text-center`}>
               {t(translations.assistanceSubtitle)}
             </p>
 
@@ -918,10 +1160,10 @@ export default function Home() {
               e.preventDefault();
               console.log('Form submitted:', assistanceForm);
               // Handle form submission here
-            }} className="space-y-3 sm:space-y-4 w-full">
+            }} className="space-y-3 w-full">
               {/* Name Field */}
               <div className="w-full">
-                <label className={`block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <label className={`block text-xs font-semibold text-gray-700 mb-1.5 ${isRTL ? 'text-right' : 'text-left'}`}>
                   {t(translations.nameLabel)} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -930,13 +1172,13 @@ export default function Home() {
                   onChange={(e) => setAssistanceForm({ ...assistanceForm, name: e.target.value })}
                   placeholder={t(translations.nameLabel)}
                   required
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base text-[#1e1e1e] bg-white transition-all duration-200"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-[#1e1e1e] bg-white transition-all duration-200"
                 />
               </div>
 
               {/* Location Field */}
               <div className="w-full">
-                <label className={`block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <label className={`block text-xs font-semibold text-gray-700 mb-1.5 ${isRTL ? 'text-right' : 'text-left'}`}>
                   {t(translations.locationLabel)} <span className="text-red-500">*</span>
                 </label>
                 <div className="relative w-full">
@@ -944,7 +1186,7 @@ export default function Home() {
                     value={assistanceForm.location}
                     onChange={(e) => setAssistanceForm({ ...assistanceForm, location: e.target.value })}
                     required
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base text-[#1e1e1e] bg-white transition-all duration-200 appearance-none cursor-pointer pr-8 sm:pr-10"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-[#1e1e1e] bg-white transition-all duration-200 appearance-none cursor-pointer pr-8"
                   >
                     <option value="">{t(translations.preferredLocation)}</option>
                     {destinationsData.map((dest) => (
@@ -953,8 +1195,8 @@ export default function Home() {
                       </option>
                     ))}
                   </select>
-                  <div className={`absolute inset-y-0 flex items-center pointer-events-none ${isRTL ? 'left-0 pl-3' : 'right-0 pr-3'}`}>
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className={`absolute inset-y-0 flex items-center pointer-events-none ${isRTL ? 'left-0 pl-2' : 'right-0 pr-2'}`}>
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
@@ -963,7 +1205,7 @@ export default function Home() {
 
               {/* Phone Field */}
               <div className="w-full">
-                <label className={`block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <label className={`block text-xs font-semibold text-gray-700 mb-1.5 ${isRTL ? 'text-right' : 'text-left'}`}>
                   {t(translations.phoneLabel)} <span className="text-red-500">*</span>
                 </label>
                 <div className="flex flex-col sm:flex-row gap-2 w-full">
@@ -971,7 +1213,7 @@ export default function Home() {
                     <select
                       value={assistanceForm.phoneCode}
                       onChange={(e) => setAssistanceForm({ ...assistanceForm, phoneCode: e.target.value })}
-                      className="w-full sm:w-auto px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base text-[#1e1e1e] bg-white transition-all duration-200 appearance-none cursor-pointer sm:min-w-[110px] pr-8 sm:pr-10"
+                      className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-[#1e1e1e] bg-white transition-all duration-200 appearance-none cursor-pointer sm:min-w-[100px] pr-8"
                     >
                       <option value="+20">🇪🇬 +20</option>
                       <option value="+966">🇸🇦 +966</option>
@@ -981,8 +1223,8 @@ export default function Home() {
                       <option value="+973">🇧🇭 +973</option>
                       <option value="+968">🇴🇲 +968</option>
                     </select>
-                    <div className={`absolute inset-y-0 flex items-center pointer-events-none ${isRTL ? 'left-0 pl-3' : 'right-0 pr-3'}`}>
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className={`absolute inset-y-0 flex items-center pointer-events-none ${isRTL ? 'left-0 pl-2' : 'right-0 pr-2'}`}>
+                      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </div>
@@ -993,30 +1235,30 @@ export default function Home() {
                     onChange={(e) => setAssistanceForm({ ...assistanceForm, phone: e.target.value })}
                     placeholder={t(translations.phoneLabel)}
                     required
-                    className="flex-1 w-full sm:w-auto px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base text-[#1e1e1e] bg-white transition-all duration-200"
+                    className="flex-1 w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-[#1e1e1e] bg-white transition-all duration-200"
                   />
                 </div>
               </div>
 
               {/* Message Field */}
               <div className="w-full">
-                <label className={`block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <label className={`block text-xs font-semibold text-gray-700 mb-1.5 ${isRTL ? 'text-right' : 'text-left'}`}>
                   {t(translations.messageLabel)}
                 </label>
                 <textarea
                   value={assistanceForm.message}
                   onChange={(e) => setAssistanceForm({ ...assistanceForm, message: e.target.value })}
                   placeholder={t(translations.yourMessage)}
-                  rows={4}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base text-[#1e1e1e] bg-white resize-none transition-all duration-200"
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-[#1e1e1e] bg-white resize-none transition-all duration-200"
                 />
               </div>
 
               {/* Submit Button */}
-              <div className="pt-2 sm:pt-4 w-full">
+              <div className="pt-3 w-full">
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                  className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 text-sm"
                 >
                   {t(translations.send)}
                 </button>

@@ -32,7 +32,7 @@ export default function ImageWithLoader({
   };
 
   return (
-    <div className={`relative ${fill ? 'w-full h-full' : ''} ${className}`}>
+    <div className={fill ? 'absolute inset-0' : `relative ${className}`}>
       {/* Skeleton Loader */}
       {isLoading && !hasError && (
         <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer">
@@ -72,7 +72,7 @@ export default function ImageWithLoader({
           {...(priority ? {} : { loading })}
           className={`transition-opacity duration-300 ${
             isLoading ? 'opacity-0' : 'opacity-100'
-          } ${className}`}
+          } ${fill ? className : ''}`}
           onLoad={handleLoad}
           onError={handleError}
           {...props}
